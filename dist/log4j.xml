@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%p][%t][%C{1}] - %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
+      <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
+		<param name="File" value="logs/print-list-cleanup.log"/>
+      <param name="Append" value="false"/>
+      <param name="MaxFileSize" value="50MB"/>
+      <param name="MaxBackupIndex" value="10"/>
+      <layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%p][%t][%C{1}] - %m%n" />
+      </layout>
+   </appender>
+	
+    <category name="org.springframework">
+      <priority value="INFO"/>
+    </category>
+    
+    <category name="com.ess">
+      <priority value="DEBUG"/>
+    </category>
+    
+	<root>
+		<priority value="INFO" />
+		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAppender" />
+	</root>
+	
+</log4j:configuration> 
+    
