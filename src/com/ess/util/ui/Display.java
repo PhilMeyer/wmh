@@ -27,6 +27,7 @@ import com.ess.util.mw.rw.Location;
 
 public class Display extends JPanel {
 
+	private static final long serialVersionUID = 6222201093159541300L;
 	public final static double PIXELS_IN_MM = 47.0 / 40.0;
 	public final static double PIXELS_IN_INCH = PIXELS_IN_MM * 25.4;
 	
@@ -34,7 +35,6 @@ public class Display extends JPanel {
 	
 	Environment environment;
 	Logger log = Logger.getLogger(Display.class);
-	private static final String IMAGE_DIR = "C:\\Users\\Phil\\Downloads\\WMH_Vassal421\\";
 	Unit selected;
 	UnitBox unitBox;
 	boolean first = true;

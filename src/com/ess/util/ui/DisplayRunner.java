@@ -10,8 +10,8 @@ public class DisplayRunner implements Runnable{
 	
 	public void run(){
 		for(;;){
-			//frame.refreshDisplay();
-			//sleep();
+			frame.refreshDisplay();
+			sleep();
 		}
 	}
 

@@ -11,6 +11,35 @@ public class UnitFactory {
 //		return unit;
 //	}
 	
+	public static Unit deneghra(){
+		Unit unit = new Unit("X_W_Deneghra_slime.png", 30,4,7,7,5,13,19,7);
+		unit.addWep(new MeleeWeapon("Forge Father",5,WeaponMod.CRITICAL_SMITE));
+		unit.addWep(new RangedWeapon("Double-Barreled Handcannon",12,5,2,WeaponMod.BOTH_BARRELS));
+		return unit;
+	}
+	
+
+	public static Unit deathripper(){
+		Unit unit = new Unit("X_J_Deathripper_slime.png", 40, 5,6,5,6,12,18,7);
+		unit.addWep(new RangedWeapon("Cannon",12,3));
+		return unit;
+	}
+	
+
+	public static Unit baneThrall(){
+		Unit unit = new Unit("X_U_BaneThrall_slime.png", 30, 5,6,5,6,12,18,7);
+		unit.addWep(new RangedWeapon("Cannon",12,3));
+		return unit;
+	}
+
+	public static Unit slayer(){
+		Unit unit = new Unit("X_J_Slayer_slime.png", 50, 4,12,6,5,9,19,7);
+		unit.addWep(new MeleeWeapon("Grappler", 4, WeaponMod.OPEN_FIST));
+		unit.addWep(new MeleeWeapon("Drill", 5));
+		return unit;
+	}
+	
+	
 	public static Unit gorten(){
 		Unit unit = new Unit("M_W_Gorten.png", 30,4,7,7,5,13,19,7);
 		unit.addWep(new MeleeWeapon("Forge Father",5,WeaponMod.CRITICAL_SMITE));

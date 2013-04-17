@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 public class ImageCache {
 
-	private static final String IMAGE_DIR = "C:\\Users\\Phil\\Downloads\\WMH_Vassal421\\";
+	private static final String IMAGE_DIR = "C:\\Users\\Phil\\Downloads\\_games\\WMH_Vassal421\\";
 	
 	Map<String,Image> map = new HashMap<>();
 	
