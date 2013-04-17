@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.ess.util.mw.Unit;
+import com.ess.util.mw.model.Unit;
 import com.ess.util.ui.RunWMH.Side;
 
 public class Environment {
@@ -24,11 +24,25 @@ public class Environment {
 		addUnit(side, u, new Location(x, y, 0));
 	}
 
-	public void place(Unit u, Location location) {
-		Unit unitAt = getUnitAt(location);
-		if(unitAt == null || unitAt.equals(u)){
+	public boolean place(Unit u, Location location) {
+		Unit unitAt = getCollision(u, location);
+		boolean valid = unitAt == null || unitAt.equals(u);
+		if(valid){
 			unitLocations.put(u, location);
 		}
+		return valid;
+	}
+	
+	public Unit getCollision(Unit u, Location location){
+		for (Entry<Unit, Location> entry : units().entrySet()) {
+			double distance = GeometryUtils.distance(new Location(location.x, location.y), entry.getValue());
+			double r1 = entry.getKey().base.scaled() / 2;
+			double r2 = u.base.scaled() / 2;
+			if (distance < r1 + r2 && !entry.getKey().equals(u)) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 
 	public void addUnit(Side side, Unit u, Location location) {
@@ -44,7 +58,7 @@ public class Environment {
 		for (Entry<Unit, Location> entry : units().entrySet()) {
 			double distance = GeometryUtils.distance(new Location(x, y), entry.getValue());
 			//log.debug(distance);
-			if (distance < entry.getKey().base / 2) {
+			if (distance < entry.getKey().base.size / 2) {
 				return entry.getKey();
 			}
 		}

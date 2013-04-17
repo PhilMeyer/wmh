@@ -3,7 +3,7 @@ package com.ess.util.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ess.util.mw.Unit;
+import com.ess.util.mw.model.Unit;
 import com.ess.util.mw.rw.Environment;
 import com.ess.util.ui.RunWMH.Side;
 

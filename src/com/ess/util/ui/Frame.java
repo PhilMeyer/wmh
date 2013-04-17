@@ -13,7 +13,7 @@ public class Frame extends JFrame{
 	
 	public Frame(Environment e){
 		super("Hate this part");
-		display = new Display(e, unitBox);
+		display = new Display(e, this);
 		assemble(e);
 		pack();
 		//setLocation(500,100);
@@ -33,6 +33,14 @@ public class Frame extends JFrame{
 
 	public void refreshDisplay() {
 		display.repaint();
+	}
+
+	public UnitBox getUnitBox() {
+		return unitBox;
+	}
+
+	public void setUnitBox(UnitBox unitBox) {
+		this.unitBox = unitBox;
 	}
 	
 	

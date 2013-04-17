@@ -1,24 +1,30 @@
-package com.ess.util.mw;
+package com.ess.util.mw.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ess.util.mw.behave.BehavioralStrategy;
+import com.ess.util.mw.Ability;
+import com.ess.util.mw.Base;
+import com.ess.util.mw.Weapon;
+import com.ess.util.mw.WeaponMod;
 import com.ess.util.ui.RunWMH.Side;
 
-public class Unit {
+public abstract class Unit {
 
+	static int id = 0;
+	
 	public final int str, def, arm, rat, mat, spd, cmd;
 	int hp = 1;
-	public final int base;
+	public final Base base;
 	
 	List<Ability> abilities = new ArrayList<>();
 	List<Weapon> weapons = new ArrayList<>();
 	public final String imagePath;
-	BehavioralStrategy behavior;
 	Side side;
+	public final String name;
 
-	public Unit(String imagePath, int base, int spd, int str, int mat, int rat, int def, int arm, int cmd){
+	public Unit(String name, String imagePath, Base base, int spd, int str, int mat, int rat, int def, int arm, int cmd){
+		this.name = name;
 		this.spd = spd;
 		this.str = str;
 		this.mat = mat;
@@ -28,15 +34,7 @@ public class Unit {
 		this.cmd = cmd;
 		this.imagePath = imagePath;
 		this.base = base;
-	}
-	
-	public int getDefaultWepPow(){
-		Weapon weapon = weapons.get(0);
-		int pow = 0;
-		if(weapon != null){
-			pow = weapon.pow;
-		}
-		return pow;
+		id++;
 	}
 
 	public void addWep(Weapon weapon) {
@@ -44,7 +42,7 @@ public class Unit {
 	}
 	
 	public String toString(){
-		return imagePath;
+		return name+"_"+id;
 	}
 	public Side getSide() {
 		return side;

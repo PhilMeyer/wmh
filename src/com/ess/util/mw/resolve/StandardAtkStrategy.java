@@ -1,6 +1,6 @@
 package com.ess.util.mw.resolve;
 
-import com.ess.util.mw.Unit;
+import com.ess.util.mw.model.Unit;
 
 
 public class StandardAtkStrategy implements AtkResolveStrategy{

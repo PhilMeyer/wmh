@@ -4,12 +4,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.ess.util.mw.Unit;
 import com.ess.util.mw.behave.Action;
 import com.ess.util.mw.behave.AttackAction;
 import com.ess.util.mw.behave.BehavioralStrategy;
 import com.ess.util.mw.behave.MeleeBasic;
 import com.ess.util.mw.behave.MoveTowardsAction;
+import com.ess.util.mw.model.Unit;
 import com.ess.util.mw.resolve.Sim;
 import com.ess.util.mw.rw.Environment;
 import com.ess.util.mw.rw.GeometryUtils;

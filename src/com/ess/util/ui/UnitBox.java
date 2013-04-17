@@ -6,9 +6,9 @@ import java.text.MessageFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 
-import com.ess.util.mw.Unit;
 import com.ess.util.mw.Weapon;
 import com.ess.util.mw.WeaponMod;
+import com.ess.util.mw.model.Unit;
 
 @SuppressWarnings("serial")
 public class UnitBox extends JEditorPane {
@@ -25,12 +25,15 @@ public class UnitBox extends JEditorPane {
 		this.u = u;
 		setText(getHtml());
 		setPreferredSize(new Dimension(300,300));
-		String name = u == null ? "" : u.imagePath;
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 
 	public String getHtml() {
+		if(u == null){
+			return "";
+		}
 		StringBuilder sb = new StringBuilder("<html><body style='color:blue'>");
+		sb.append("<h2>"+u.name+"</h2>");
 		sb.append("<table><tr><td>SPD</td><td>MAT</td><td>RAT</td><td>DEF</td><td>ARM</td></tr>");
 		if (u != null) {
 			sb.append(MessageFormat.format(STAT_LINE, u.spd, u.mat, u.rat, u.def, u.arm));
