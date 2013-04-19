@@ -14,7 +14,7 @@ public class CryxFactory {
 	
 	public static Unit deneghra() {
 		Unit unit = new Warcaster("War Witch Deneghra", "X_W_Deneghra_slime.png", Base.SMALL, 7, 5, 5, 4, 16, 14, 8, 7);
-		unit.addWep(new MeleeWeapon("Sliver", 5, WeaponMod.SHADOW_BIND));
+		unit.addWep(new MeleeWeapon("Sliver", 5, WeaponMod.SHADOW_BIND, WeaponMod.REACH));
 		return unit;
 	}
 

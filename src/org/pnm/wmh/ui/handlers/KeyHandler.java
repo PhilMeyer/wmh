@@ -62,10 +62,12 @@ public class KeyHandler extends KeyAdapter {
 		if(!environment.tooFar(u, current, newLocation)){
 			environment.place(u, newLocation);
 		}
+		display.repaint();
 	}
 
 	protected void turn(Unit u, Location current, int degrees) {
 		display.getEnvironment().place(u, new Location(current.x, current.y, current.direction + degrees));
+		display.repaint();
 	}
 
 }
