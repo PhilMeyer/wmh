@@ -2,9 +2,9 @@ package com.ess.util.ui;
 
 public class DisplayRunner implements Runnable{
 
-	private Frame frame;
+	private GameFrame frame;
 
-	public DisplayRunner(Frame frame){
+	public DisplayRunner(GameFrame frame){
 		this.frame = frame;
 	}
 	

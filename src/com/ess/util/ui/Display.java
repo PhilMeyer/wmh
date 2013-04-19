@@ -2,22 +2,15 @@ package com.ess.util.ui;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dialog.ModalExclusionType;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.Map.Entry;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
@@ -26,149 +19,40 @@ import com.ess.util.mw.Constants;
 import com.ess.util.mw.WeaponMod;
 import com.ess.util.mw.model.Unit;
 import com.ess.util.mw.rw.Environment;
-import com.ess.util.mw.rw.GeometryUtils;
 import com.ess.util.mw.rw.Location;
+import com.ess.util.ui.handlers.KeyHandler;
+import com.ess.util.ui.handlers.MouseHandler;
 
 public class Display extends JPanel {
 
 	private static final long serialVersionUID = 6222201093159541300L;
-	public final static double PIXELS_IN_INCH = Constants.SCALE_FACTOR * 25.4;
+	static Logger log = Logger.getLogger(Display.class);
 
 	ImageCache cache = new ImageCache();
-
-	Environment environment;
-	Logger log = Logger.getLogger(Display.class);
+	final Environment environment;
+	final GameFrame frame;
+	
 	Unit selected;
-	boolean first = true;
 	Location draggedLocation;
-	Frame frame;
-	boolean userInputRequested = false;
+	boolean collision;
 
-	public Display(final Environment environment, final Frame frame) {
+	public Display(Environment environment, GameFrame frame) {
 		this.environment = environment;
 		this.frame = frame;
 		setPreferredSize(new Dimension(1000, 800));
-
-		addMouseMotionListener(new MouseAdapter() {
-
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				if (selected != null && !userInputRequested) {
-					Location origin = environment.getLocation(selected);
-					int angle = GeometryUtils.getAngle(origin, new Location(e.getX(), e.getY()));
-					draggedLocation = new Location(e.getX(), e.getY(), 180 - angle);
-					repaint();
-				}
-			}
-		});
-
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				clicked(environment, e);
-			}
-
-			private void clicked(final Environment environment, MouseEvent e) {
-				Location loc = new Location(e.getX(), e.getY());
-				// log.debug("Clicked: "+loc);
-				Unit u = environment.getUnitAt(loc);
-				if (u != null && !userInputRequested) {
-					int button = e.getButton();
-					if (button == MouseEvent.BUTTON1) {
-						log.debug(u);
-						selected = u;
-						frame.getUnitBox().setSelectedUnit(selected);
-					} else if (button == MouseEvent.BUTTON3) {
-						JDialog dialog = new JDialog(frame);
-						JPanel panel = new JPanel();
-						panel.add(new JButton("Attack"));
-						panel.add(new JButton("Charge"));
-						dialog.getContentPane().add(panel);
-						dialog.pack();
-						dialog.setLocation(loc.intX()+50, loc.intY()-50);
-						dialog.setVisible(true);
-						dialog.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-						userInputRequested = true;
-					}
-				}
-				repaint();
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (draggedLocation != null && !userInputRequested) {
-					environment.place(selected, draggedLocation);
-					draggedLocation = null;
-					repaint();
-				}
-			}
-
-		});
-
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				System.out.println(e.getKeyCode());
-				switch (e.getKeyCode()) {
-				case 39:
-					turnSelectionRight();
-					break;
-				case 37:
-					turnSelectionLeft();
-					break;
-				case 38:
-					moveSelectedForward();
-					break;
-				case 40:
-					moveSelectedBackward();
-					break;
-				}
-				repaint();
-			}
-		});
+		MouseHandler handler = new MouseHandler(this);
+		addMouseMotionListener(handler);
+		addMouseListener(handler);
+		addKeyListener(new KeyHandler(this));
 		setFocusable(true);
 	}
-
-	protected void moveSelectedBackward() {
-		if (selected != null) {
-			Location location = environment.getLocation(selected);
-			Location newLocation = GeometryUtils.calculateNewLocation(new Location(location.x, location.y,
-					location.direction - 180), 8);
-			environment.place(selected, newLocation);
-		}
-	}
-
-	protected void moveSelectedForward() {
-		if (selected != null) {
-			Location location = environment.getLocation(selected);
-			Location newLocation = GeometryUtils.calculateNewLocation(location, 8);
-			environment.place(selected, newLocation);
-		}
-	}
-
-	protected void turnSelectionRight() {
-		if (selected != null) {
-			Location location = environment.getLocation(selected);
-			environment.place(selected, new Location(location.x, location.y, location.direction + 15));
-		}
-	}
-
-	protected void turnSelectionLeft() {
-		if (selected != null) {
-			Location location = environment.getLocation(selected);
-			environment.place(selected, new Location(location.x, location.y, location.direction - 15));
-		}
-	}
+	
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.DARK_GRAY);
-		// painBackground
-		if (first) {
-			drawBackground(g);
-			// first = false;
-		}
+		drawBackground(g);
 		drawUnits(g);
 		drawSelected(g);
 	}
@@ -219,7 +103,8 @@ public class Display extends JPanel {
 	private void drawSelected(Graphics g) {
 		if (selected != null) {
 			Location loc = environment.getLocation(selected);
-			String auraPath = selected.base.size + "mm_Aura_Green.png";
+			String color = friendlySelected() ? "Green" : "Red";
+			String auraPath = selected.base.size + "mm_Aura_"+color+".png";
 			Image aura = getImage(auraPath);
 			int w = aura.getWidth(null);
 			int drawX = loc.intX() - w / 2;
@@ -235,20 +120,68 @@ public class Display extends JPanel {
 			g.drawImage(op.filter((BufferedImage) reach, null), drawX, drawY, null);
 			g.drawImage(aura, drawX, drawY, null);
 			int maxRange = selected.getMaxRange();
-			int dist = (int) Math.round(PIXELS_IN_INCH * maxRange);
+			int dist = (int) Math.round(Constants.INCHES_IN_PIXELS * maxRange);
 			drawCircle(g, loc.intX(), loc.intY(), dist);
 
 			if (draggedLocation != null) {
 				drawUnit(g, selected, draggedLocation, true);
 				g.drawLine(loc.intX(), loc.intY(), draggedLocation.intX(), draggedLocation.intY());
+				if(collision){
+					Image no = getImage("no.png");
+					w = no.getWidth(null);
+					g.drawImage(no, draggedLocation.intX() - w / 2, draggedLocation.intY() - w / 2, null);
+				}
+			}
+			
+			if(friendlySelected()){
+				double remainingMove = environment.getRemainingMove(selected);
+				dist = (int) Math.round(Constants.INCHES_IN_PIXELS * remainingMove + (selected.base.scaled()/2));
+				g.setColor(Color.BLUE);
+				drawCircle(g, loc.intX(), loc.intY(), dist);
 			}
 
 			drawUnit(g, selected, loc, false);
 		}
 	}
 
+
+	public boolean friendlySelected() {
+		return selected != null && selected.getSide() == environment.getCurrentSide();
+	}
+
 	private Image getImage(String auraPath) {
 		return cache.getImage(auraPath);
+	}
+
+	public Unit getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Unit u) {
+		this.selected = u;
+		repaint();
+	}
+
+	public Environment getEnvironment() {
+		return environment;
+	}
+
+	public void setDraggedLocation(Location draggedLocation) {
+		this.draggedLocation = draggedLocation;
+		repaint();
+	}
+
+	public Location getDraggedLocation() {
+		return draggedLocation;
+	}
+
+	public UnitBox getUnitBox() {
+		return frame.getUnitBox();
+	}
+
+
+	public void setCollision(boolean collision) {
+		this.collision = collision;
 	}
 
 }

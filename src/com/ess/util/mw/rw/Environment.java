@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.ess.util.mw.Constants;
 import com.ess.util.mw.model.Unit;
 import com.ess.util.ui.RunWMH.Side;
 
@@ -19,6 +20,23 @@ public class Environment {
 
 	Logger log = Logger.getLogger(Environment.class);
 	Map<Unit, Location> unitLocations = new HashMap<>();
+	TurnTracking tracking = new TurnTracking();
+	
+	Side current = Side.PLAYER_1;
+	
+	public double getRemainingMove(Unit u){
+		double remaining = tracking.getRemainingMovement(u);
+		return remaining;
+	}
+	
+	public Side getCurrentSide(){
+		return current;
+	}
+	
+	public void swapTurn(){
+		current = current == Side.PLAYER_1 ? Side.PLAYER_2 : Side.PLAYER_1;
+		tracking.initialize(unitLocations.keySet());
+	}
 
 	public void addUnit(Side side, Unit u, double x, double y) {
 		addUnit(side, u, new Location(x, y, 0));
@@ -28,6 +46,9 @@ public class Environment {
 		Unit unitAt = getCollision(u, location);
 		boolean valid = unitAt == null || unitAt.equals(u);
 		if(valid){
+			Location current = getLocation(u);
+			double distance = GeometryUtils.distance(location, current);
+			tracking.decrement(u, distance/Constants.INCHES_IN_PIXELS);
 			unitLocations.put(u, location);
 		}
 		return valid;

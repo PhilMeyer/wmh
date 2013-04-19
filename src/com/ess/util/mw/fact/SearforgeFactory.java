@@ -33,7 +33,7 @@ public class SearforgeFactory {
 	}
 
 	public static Unit gunner() {
-		Unit unit = new Warjack("Gunner", "M_J_Gunner.png", Base.SMALL, 5, 6, 5, 6, 12, 18);
+		Unit unit = new Warjack("Gunner", "M_J_Gunner.png", Base.MEDIUM, 5, 6, 5, 6, 12, 18);
 		unit.addWep(new RangedWeapon("Cannon", 12, 12));
 		return unit;
 	}

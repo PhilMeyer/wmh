@@ -18,7 +18,7 @@ public class RunWMH {
 	}
 
 	protected static void showUI(Environment e) {
-		Frame frame = new Frame(e);
+		GameFrame frame = new GameFrame(e);
 		Thread refreshThread = new Thread(new DisplayRunner(frame));
 		refreshThread.start();
 	}
@@ -32,12 +32,12 @@ public class RunWMH {
 		e.addUnit(Side.PLAYER_1, CryxFactory.defiler(), 200, 170, 180);
 		e.addUnit(Side.PLAYER_1, CryxFactory.slayer(), 480, 150, 180);
 
-		e.addUnit(Side.PLAYER_1, SearforgeFactory.gorten(), 360, 560);
-		e.addUnit(Side.PLAYER_1, SearforgeFactory.driller(), 410, 500);
-		e.addUnit(Side.PLAYER_1, SearforgeFactory.gunner(), 480, 550);
-		e.addUnit(Side.PLAYER_1, SearforgeFactory.gunner(), 320, 500);
-		e.addUnit(Side.PLAYER_1, SearforgeFactory.gunner(), 250, 550);
-
+		e.addUnit(Side.PLAYER_2, SearforgeFactory.gorten(), 360, 560);
+		e.addUnit(Side.PLAYER_2, SearforgeFactory.driller(), 410, 500);
+		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 480, 550);
+		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 320, 500);
+		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 250, 550);
+		e.swapTurn();
 		return e;
 	}
 
