@@ -3,6 +3,7 @@ package org.pnm.wmh;
 import org.pnm.wmh.fact.CryxFactory;
 import org.pnm.wmh.fact.SearforgeFactory;
 import org.pnm.wmh.rw.Environment;
+import org.pnm.wmh.rw.Game;
 import org.pnm.wmh.ui.GameFrame;
 
 
@@ -13,16 +14,18 @@ public class WMH {
 	};
 
 	public static void main(String[] args) {
-		Environment e = setupEnvironment();
-		showUI(e);
+		Game g = setupGame();
+		showUI(g);
 	}
 
-	protected static void showUI(Environment e) {
-		GameFrame frame = new GameFrame(e);
+	protected static void showUI(Game g) {
+		GameFrame frame = new GameFrame(g);
 	}
 
-	private static Environment setupEnvironment() {
-		Environment e = new Environment();
+	private static Game setupGame() {
+		Game g = new Game();
+		Environment e = new Environment(g);
+		g.setEnvironment(e);
 
 		e.addUnit(Side.PLAYER_1, CryxFactory.deneghra(), 360, 150, 180);
 		e.addUnit(Side.PLAYER_1, CryxFactory.deathripper(), 410, 100, 180);
@@ -35,8 +38,8 @@ public class WMH {
 		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 480, 550);
 		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 320, 500);
 		e.addUnit(Side.PLAYER_2, SearforgeFactory.gunner(), 250, 550);
-		e.swapTurn();
-		return e;
+		g.swapTurn();
+		return g;
 	}
 
 //	protected static void addBanes(Environment e) {

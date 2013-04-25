@@ -8,7 +8,7 @@ public class UserState {
 
 	Unit selected;
 	Location dragged;
-	Unit activated;
+	//Unit activated;
 	boolean illegalMove;
 
 	public Unit getSelected() {
@@ -27,13 +27,13 @@ public class UserState {
 		this.dragged = dragged;
 	}
 
-	public Unit getActivated() {
-		return activated;
-	}
-
-	public void setActivated(Unit activated) {
-		this.activated = activated;
-	}
+//	public Unit getActivated() {
+//		return activated;
+//	}
+//
+//	public void setActivated(Unit activated) {
+//		this.activated = activated;
+//	}
 
 	public boolean isIllegalMove() {
 		return illegalMove;

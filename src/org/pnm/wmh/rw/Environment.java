@@ -20,28 +20,16 @@ public class Environment {
 
 	Logger log = Logger.getLogger(Environment.class);
 	Map<Unit, Location> unitLocations = new HashMap<>();
-	MoveTracking tracking = new MoveTracking();
+	Game game;
 	
-	Side current = Side.PLAYER_1;
-	
-	public double getRemainingMove(Unit u){
-		double remaining = tracking.getRemainingMovement(u);
-		return remaining;
-	}
-	
-	public Side getCurrentSide(){
-		return current;
+	public Environment(Game game){
+		this.game = game;
 	}
 	
 	public boolean tooFar(Unit selected, Location origin, Location newLocation) {
 		double distance = GeometryUtils.distance(newLocation, origin);
-		boolean tooFar = distance / Constants.INCHES_IN_PIXELS > getRemainingMove(selected);
+		boolean tooFar = distance / Constants.INCHES_IN_PIXELS > game.getRemainingMove(selected);
 		return tooFar;
-	}
-	
-	public void swapTurn(){
-		current = current == Side.PLAYER_1 ? Side.PLAYER_2 : Side.PLAYER_1;
-		tracking.initialize(unitLocations.keySet());
 	}
 
 	public void addUnit(Side side, Unit u, double x, double y) {
@@ -54,7 +42,7 @@ public class Environment {
 		if(valid){
 			Location current = getLocation(u);
 			double distance = GeometryUtils.distance(location, current);
-			tracking.decrement(u, distance/Constants.INCHES_IN_PIXELS);
+			game.decrementMove(u, distance/Constants.INCHES_IN_PIXELS);
 			unitLocations.put(u, location);
 		}
 		return valid;

@@ -6,13 +6,16 @@ import java.text.MessageFormat;
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 
+import org.pnm.wmh.event.EventManager;
+import org.pnm.wmh.event.SelectionEvent;
+import org.pnm.wmh.event.SelectionListener;
 import org.pnm.wmh.model.Unit;
 import org.pnm.wmh.model.Weapon;
 import org.pnm.wmh.model.WeaponMod;
 
 
 @SuppressWarnings("serial")
-public class UnitBox extends JEditorPane {
+public class UnitBox extends JEditorPane implements SelectionListener{
 	private static final String STAT_LINE = "<tr style='color:blue'><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>";
 
 	Unit u;
@@ -20,6 +23,7 @@ public class UnitBox extends JEditorPane {
 	public UnitBox() {
 		setContentType("text/html");
 		setSelectedUnit(null);
+		EventManager.registerSelectionListener(this);
 	}
 
 	public void setSelectedUnit(Unit u) {
@@ -66,6 +70,11 @@ public class UnitBox extends JEditorPane {
 		}
 		sb.append("</body></html>");
 		return sb.toString();
+	}
+
+	@Override
+	public void handle(SelectionEvent e) {
+		setSelectedUnit(e.u);
 	}
 
 }

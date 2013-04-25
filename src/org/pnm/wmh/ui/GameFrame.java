@@ -1,14 +1,12 @@
 package org.pnm.wmh.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.pnm.wmh.rw.Environment;
+import org.pnm.wmh.rw.Game;
 import org.pnm.wmh.ui.handlers.KeyHandler;
 
 
@@ -19,25 +17,31 @@ public class GameFrame extends JFrame{
 	Display display;
 	InfoBar infoBar;
 	UnitBox unitBox = new UnitBox();	
+	ButtonPanel buttons;
 	
-	public GameFrame(Environment e){
+	public GameFrame(Game g){
 		super("Totally Not Copyright Violation");
-		display = new Display(e, this);
-		infoBar = new InfoBar(e);
-		assemble(e);
+		display = new Display(g, this);
+		infoBar = new InfoBar(g);
+		assemble(g);
 		pack();
 		//setLocation(500,100);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-	private void assemble(Environment e) {
+	private void assemble(Game g) {
+		buttons = new ButtonPanel(g);
 		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
 		JPanel bottom = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		bottom.add(display);
-		bottom.add(unitBox);
+		JPanel right = new JPanel();
+		right.setLayout(new BorderLayout());
+		right.add(buttons, BorderLayout.NORTH);
+		right.add(unitBox, BorderLayout.SOUTH);
+		bottom.add(right);
 		contentPane.add(infoBar, BorderLayout.PAGE_START);
 		contentPane.add(bottom, BorderLayout.CENTER);
 		setFocusable(true);

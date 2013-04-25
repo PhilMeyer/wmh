@@ -9,7 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.pnm.wmh.WMH.Side;
-import org.pnm.wmh.rw.Environment;
+import org.pnm.wmh.event.ActivationEvent;
+import org.pnm.wmh.event.EventManager;
+import org.pnm.wmh.event.SelectionEvent;
+import org.pnm.wmh.rw.Game;
 
 
 public class InfoBar extends JPanel{
@@ -17,15 +20,17 @@ public class InfoBar extends JPanel{
 	JLabel label = new JLabel(Side.PLAYER_1.toString());
 	JButton swap = new JButton("END TURN");
 	
-	public InfoBar(final Environment environment){
+	public InfoBar(final Game game){
 		setPreferredSize(new Dimension(700,50));
 		add(label);
 		add(swap);
 		swap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				environment.swapTurn();
-				update(environment.getCurrentSide());
+				game.swapTurn();
+				update(game.getCurrentSide());
+				EventManager.notify(new SelectionEvent(null));
+				EventManager.notify(new ActivationEvent(null));
 			}
 		});
 	}
